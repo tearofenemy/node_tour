@@ -1,14 +1,20 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser').json();
-const {log} = console;
+const morgan = require('morgan');
 const port = process.env.port || 8001;
 const app = express();
+const {log} = console;
 
 app.use(express.json());
+app.use(morgan('dev'));
 
 const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
+);
+
+const users = JSON.parse(
+    fs.readFileSync(`${__dirname}/dev-data/data/users.json`)
 );
 
 const getTours = (req, res) => {
@@ -93,8 +99,33 @@ const deleteTour = (req, res) => {
     }); 
 };
 
+const getUsers = (req, res) => {
+    res.status(200).json({
+        status: 'success',
+        results: users.length,
+        data: {
+            users
+        }
+    });
+};
+
+
+/**
+ * 
+ * TOURS ROUTE
+ * 
+ */
 app.route('/api/v1/tours/').get(getTours).post(createPost);
 app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+
+/**
+ * 
+ * USERS ROUTE
+ * 
+ */
+app.route('/api/v1/users').get(getUsers);
+//app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
 
 app.listen(port, () => {
     log(`App starting on localhost:${port}`);
