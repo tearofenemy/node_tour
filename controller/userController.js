@@ -14,7 +14,7 @@ exports.getUsers = (req, res) => {
     });
 };
 
-exporst.getUser = (req, res) => {
+exports.getUser = (req, res) => {
     const userID = req.params.id * 1;
     const user = users.find(el => el.id === userID);
 
