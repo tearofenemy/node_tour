@@ -31,6 +31,16 @@ const tourSchema = new mongoose.Schema({
 
 const Tour = mongoose.model('Tour', tourSchema);
 
+const testTour = new Tour({
+    name: 'Some Name',
+    rating: 4.8,
+    price: 581
+});
+
+testTour
+        .save()
+        .then(tr => console.log(tr))
+        .catch(e => console.log(e));
 
 app.listen(port, () => {
     console.log(`App starting on localhost:${port}`);
