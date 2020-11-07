@@ -5,7 +5,7 @@ const tours = JSON.parse(
 );
 
 //MIDDLEWARE
-exports.checkID = (req, res, next, val) => {
+exports.checkID = (req, res, next) => {
     if(req.params.id * 1 > tours.length) {
         return res.status(404).json({
             status: 'failed',
