@@ -1,6 +1,7 @@
 const app = require('./app');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const port = process.env.port || 8000;
 
 dotenv.config({path: './config.env'});
 
@@ -10,12 +11,27 @@ mongoose.connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false
-}).then(conn => {
-    console.log(conn.connections);
-    console.log('DB successfully connected');
+}).then(() => console.log('DB successfully connected'));
+
+const tourSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "A tour must have a name"],
+        unique: true
+    },
+    rating: {
+        type: Number,
+        default: 4.5
+    },
+    price: {
+        type: Number,
+        required: [true, "A tour must have a price"]
+    }
 });
 
-const port = process.env.port || 8000;
+const Tour = mongoose.model('Tour', tourSchema);
+
+
 app.listen(port, () => {
     console.log(`App starting on localhost:${port}`);
 });
