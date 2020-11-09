@@ -1,8 +1,16 @@
 const Tour = require('./../models/tourModel');
 
+
+//miidleware for top 5 cheap tours
+exports.aliasTours = async (req, res, next) => {
+    req.query.limit = "5";
+    req.query.sort = "-ratingsAverage,price";
+    req.query.fields = "name,difficulty,price,ratingsAverage,summary";
+    next();
+};
+
 exports.getTours = async (req, res) => {
     try {
-        
         //FILTERING
         const queryObj = {...req.query};
         const excludedFields = ['limit', 'page', 'sort', 'fields'];
