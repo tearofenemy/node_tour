@@ -25,6 +25,7 @@ const importData = async () => {
     } catch(e) {
         throw e;
     }
+    process.exit();
 };
 
 const deleteData = async() => {
@@ -34,6 +35,7 @@ const deleteData = async() => {
     } catch(e) {
         throw e;
     }
+    process.exit();
 }
 
 if(process.argv[2] === '--import') {
