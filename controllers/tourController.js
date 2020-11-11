@@ -11,7 +11,11 @@ exports.aliasTours = (req, res, next) => {
 
 exports.getTours = async (req, res) => {
     try {
-        const features = new APIFeatures(Tour.find(), req.query).sort().filter().limitFields().paginate();
+        const features = new APIFeatures(Tour.find(), req.query)
+            .filter()
+            .sort()
+            .limitFields()
+            .paginate();
         const tours = await features.query;
 
         res.status(200).json({
@@ -177,7 +181,7 @@ exports.getMonthlyPlan = async (req, res) => {
                 }
             },
             {
-                $sort: {numToursStats: -1}
+                $sort: {numToursStarts: -1}
             },
             {
                 $limit: 6
