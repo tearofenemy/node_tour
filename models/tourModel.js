@@ -10,7 +10,6 @@ const tourSchema = new mongoose.Schema({
         trim: true,
         maxLength: [40, 'A tour name cannot be longer than 40 characters'],
         minLength: [15, 'A tour name cannot be less than 15 characters']
-        //validate: [validator.isAlpha, 'Tour name must only contain character']
     },
     slug: String,
     duration: {
@@ -81,7 +80,7 @@ tourSchema.virtual('durationWeeks').get(function() {
     return this.duration / 7;
 });
 
-tourSchema.pre('save', next => {
+tourSchema.pre('save', function(next) {
     this.slug = slugify(this.name, {lower: true});
     next();
 });
