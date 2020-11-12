@@ -8,7 +8,8 @@ const {
 } = require('../controllers/userController');
 
 const {
-    signup
+    signup,
+    login
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -18,9 +19,12 @@ router
     .post(signup);
 
 router
+    .route('/login')
+    .post(login);
+
+router
     .route('/')
-    .get(getUsers)
-    .post(createUser);
+    .get(getUsers);
 
 router
     .route('/:id')
