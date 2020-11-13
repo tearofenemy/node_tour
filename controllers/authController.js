@@ -13,6 +13,7 @@ exports.signup = async (req, res) => {
         const newUser = await User.create({
             username: req.body.username,
             email: req.body.email,
+            role: req.body.role,
             password: req.body.password,
             confirmPassword: req.body.confirmPassword
         });
@@ -86,6 +87,32 @@ exports.protect = async (req, res, next) => {
         return next(); //User resently changed password. Please, log again
     }
 
-    req.user = freshUser;
+    req.user = currentUser;
     next();
+}
+
+exports.restrictTo = (...roles) => {
+    return (req, res, next) => {
+        if(!roles.includes(req.user.role)) {
+            return next(); //You are not have a permission
+        }
+    };
+
+    next();
+}
+
+exports.forgotPassword = async (req, res, next) => {
+    const user = User.findOne({email: req.body.email});
+
+    if(!user) {
+        return next(); //User with provided email not found. Try again
+    }
+
+    const resetToken = user.createPasswordResetToken();
+
+    await user.save({validateBeforeSave: false});
+}
+
+exports.resetPassword = (req, res, next) => {
+
 }
