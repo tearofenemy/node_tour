@@ -4,14 +4,18 @@ const {
     getUser, 
     createUser, 
     updateUser, 
-    deleteUser
+    deleteUser,
+    updateMe,
+    deleteMe
 } = require('../controllers/userController');
 
 const {
     signup,
     login,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    updatePassword,
+    protect 
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -30,7 +34,11 @@ router
 
 router
     .route('/reset-password/:token')
-    .patch(resetPassword);    
+    .patch(resetPassword);   
+    
+router
+    .route('/update-password')
+    .patch(protect, updatePassword);    
 
 router
     .route('/')
@@ -41,5 +49,13 @@ router
     .get(getUser)
     .patch(updateUser)
     .delete(deleteUser);
+
+router
+    .route('/updateMe')
+    .patch(protect, updateMe)    
+
+router
+    .route('/deleteMe')
+    .delete(protect, deleteMe) 
 
 module.exports = router;

@@ -10,6 +10,28 @@ const signToken = id => {
     });
 }
 
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id);
+
+    const cookieOptions = {
+        expires: new Date(Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000),
+        httpOnly: true
+    }
+    if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+    
+    res.cookie('jwt', token, cookieOptions);
+
+    user.password = undefined;
+    
+    res.status(statusCode).json({
+        status: 'success',
+        token,
+        data: {
+            user
+        }
+    });
+};
+
 exports.signup = async (req, res) => {
     try {
         const newUser = await User.create({
@@ -20,15 +42,7 @@ exports.signup = async (req, res) => {
             confirmPassword: req.body.confirmPassword
         });
 
-        const token = signToken(newUser._id);    
-
-        res.status(201).json({
-            status: 'success',
-            token,
-            data: {
-                newUser
-            }
-        });
+        createSendToken(newUser, 201, res);
     } catch(e) {
         res.status(400).json({
             status: 'failed',
@@ -154,11 +168,20 @@ exports.resetPassword = async (req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save();
 
+    createSendToken(user, 200, res);
+}
 
-    const token = signToken(user._id);
- 
-    res.status(200).json({
-        status: 'success',
-        token
-    });
+
+exports.updatePassword = async (req, res, next) => {
+    const user = await User.findById(req.user.id).select('+password');
+
+    if(!(await user.comparePassword(req.body.currentPassword, user.password))) {
+        return next(); //Passwords do not match
+    }
+
+    user.password = req.body.password;
+    user.confirmPassword = req.body.confirmPassword;
+    await user.save();
+
+    createSendToken(user, 200, res);
 }
