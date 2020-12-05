@@ -16,15 +16,11 @@ const {
     forgotPassword,
     resetPassword,
     updatePassword,
-    protect
+    protect,
+    restrictTo
 } = require('../controllers/authController');
 
 const router = express.Router();
-
-
-router
-    .route('/me')
-    .get(protect, getMe, getUser)
 
 router
     .route('/signup')
@@ -40,11 +36,30 @@ router
 
 router
     .route('/reset-password/:token')
-    .patch(resetPassword);   
-    
+    .patch(resetPassword);  
+
+
+router.use(protect);
+
+router
+    .route('/updateMe')
+    .patch(updateMe)    
+
+router
+    .route('/deleteMe')
+    .delete(deleteMe) 
+
+
+router
+    .route('/me')
+    .get(getMe, getUser)
+
 router
     .route('/update-password')
-    .patch(protect, updatePassword);    
+    .patch(updatePassword); 
+
+ 
+router.use(restrictTo('admin'));      
 
 router
     .route('/')
@@ -56,12 +71,5 @@ router
     .patch(updateUser)
     .delete(deleteUser);
 
-router
-    .route('/updateMe')
-    .patch(protect, updateMe)    
-
-router
-    .route('/deleteMe')
-    .delete(protect, deleteMe) 
 
 module.exports = router;

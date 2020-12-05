@@ -30,21 +30,18 @@ router
 
 router
      .route('/monthly-plan/:year')
-     .get(getMonthlyPlan);
+     .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
 router
-     .route('/')
+     .route('/') 
      .get(protect, getTours)
-     .post(createTour);
+     .post(protect, restrictTo('admin', 'lead-guide'), createTour);
 
 router
      .route('/:id')
      .get(getTour)
-     .patch(updateTour)
+     .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
      .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 
-// router
-//      .route('/:tourId/reviews')
-//      .post(protect, restrictTo('user'), createReview);     
 
 module.exports = router;
