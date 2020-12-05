@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-//const validator = require('validator');
 
 const tourSchema = new mongoose.Schema({
     name: {
@@ -97,6 +96,12 @@ const tourSchema = new mongoose.Schema({
             description: String,
             day: Number
         }
+    ],
+    guides: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User'
+        }
     ]
 }, {
     toJSON: {virtuals: true},
@@ -109,6 +114,34 @@ tourSchema.virtual('durationWeeks').get(function() {
 
 tourSchema.pre('save', function(next) {
     this.slug = slugify(this.name, {lower: true});
+    next();
+});
+
+// tourSchema.pre('save', async function(next) {
+//     const guides = this.guides.map(async id => await User.findById(id));
+//     await Promise.all(guides);
+//     next();
+// });
+
+tourSchema.pre(/^find/, function(next) {
+    this.find({$secretTour: {$ne: true}});
+
+    this.start = Date.now();
+    next();
+});
+
+tourSchema.pre(/^find/, function(next) {
+    this.populate({
+        path: 'guieds',
+        select: '-__v -passwordChangedAt'
+    });
+    next();
+});
+
+tourSchema.pre('aggergate', function(next) {
+    this.pipeline().unshift({$match: {$secretTour: {$ne: true}}});
+
+    console.log(this.pipeline(0));
     next();
 });
 
