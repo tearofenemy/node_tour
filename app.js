@@ -11,6 +11,7 @@ const app = express();
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -28,18 +29,9 @@ app.use('/api', limiter);
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
-// app.use(hpp({
-//     whitelist: [
-//         'duration',
-//         'ratingsQuantity',
-//         'ratingsAverage',
-//         'maxGroupSize',
-//         'difficulty',
-//         'price'
-//     ]
-// }));
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 module.exports = app;

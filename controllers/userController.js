@@ -1,4 +1,5 @@
 const User = require('./../models/userModel');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -86,9 +87,4 @@ exports.updateUser = (req, res) => {
         message: 'Invalid route'
     });
 }
-exports.deleteUser = (req, res) => {
-    res.status(500).json({
-        status: 'failed',
-        message: 'Invalid route'
-    });
-}
+exports.deleteUser = factory.deleteOne(User);
