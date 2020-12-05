@@ -1,5 +1,5 @@
 const User = require('./../models/userModel');
-const factory = require('./handlerFactory');
+const {deleteOne, updateOne, getOne, getAll} = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -10,43 +10,14 @@ const filterObj = (obj, ...allowedFields) => {
     return newObj;
 };
 
-exports.getUsers = async (req, res) => {
-    try {
-        const users = await User.find();
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
+}
 
-        res.status(200).json({
-            status: 'success',
-            results: users.length,
-            data: {
-                users
-            }
-        });
-    } catch (e) {
-        res.status(404).json({
-            status: 'fail',
-            message: e.message
-        });
-    }
-};
+exports.getUsers = getAll(User);
 
-exports.getUser = (req, res) => {
-    const userID = req.params.id * 1;
-    //const user = users.find(el => el.id === userID);
-
-    // if(!user) {
-    //     return res.status(404).json({
-    //         status: 'failed',
-    //         message: 'User not found'
-    //     });
-    // }
-
-    res.status(200).json({
-        status: 'success',
-        // data: {
-        //     user
-        // }
-    });
-};
+exports.getUser = getOne(User);
 
 exports.updateMe = async (req, res, next) => {
 
@@ -81,10 +52,5 @@ exports.createUser = (req, res) => {
     });
 }
 
-exports.updateUser = (req, res) => {
-    res.status(500).json({
-        status: 'failed',
-        message: 'Invalid route'
-    });
-}
-exports.deleteUser = factory.deleteOne(User);
+exports.updateUser = updateOne(User);
+exports.deleteUser = deleteOne(User);

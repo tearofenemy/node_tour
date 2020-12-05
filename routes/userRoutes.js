@@ -6,7 +6,8 @@ const {
     updateUser, 
     deleteUser,
     updateMe,
-    deleteMe
+    deleteMe,
+    getMe
 } = require('../controllers/userController');
 
 const {
@@ -15,10 +16,15 @@ const {
     forgotPassword,
     resetPassword,
     updatePassword,
-    protect 
+    protect
 } = require('../controllers/authController');
 
 const router = express.Router();
+
+
+router
+    .route('/me')
+    .get(protect, getMe, getUser)
 
 router
     .route('/signup')
