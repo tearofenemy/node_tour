@@ -30,6 +30,7 @@ const tourSchema = new mongoose.Schema({
     ratingsAverage: {
         type: Number,
         default: 4.5,
+        set: val => Math.round(val * 10) / 10,
         minLength: [1, 'A tour must have a rating more than 1'],
         maxLength: [5, 'A tour must have a rating less than 5']
     },
@@ -61,12 +62,12 @@ const tourSchema = new mongoose.Schema({
     },
     imageCover: {
         type: String,
-        required: [true, "A tour must have a cover i mage"]
+        required: [true, "A tour must have a cover image"]
     },
     images: [String],
     createdAt: {
         type: Date,
-        default: Date.now(),
+        default: Date.now,
         select: false
     },
     startDates: [Date],
@@ -112,6 +113,8 @@ tourSchema.virtual('durationWeeks').get(function() {
     return this.duration / 7;
 });
 
+tourSchema.index({price: 1});
+
 tourSchema.virtual('reviews', {
     ref: 'Review',
     localField: '_id',
@@ -122,12 +125,6 @@ tourSchema.pre('save', function(next) {
     this.slug = slugify(this.name, {lower: true});
     next();
 });
-
-// tourSchema.pre('save', async function(next) {
-//     const guides = this.guides.map(async id => await User.findById(id));
-//     await Promise.all(guides);
-//     next();
-// });
 
 tourSchema.pre(/^find/, function(next) {
     this.find({$secretTour: {$ne: true}});
