@@ -16,6 +16,7 @@ app.set('views', path.join(__dirname, 'views'));
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
+const viewRouter = require('./routes/viewRoutes');
 
 if(process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -33,16 +34,15 @@ app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
 
+//ROUTES
 
-app.get('/', (req, res) => {
-    res.status(200).render('base', {
-        tour: 'New Tour',
-        guide: 'John Doe'
-    });
-});
-
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+
+app.all('*', (req, res, next) => {
+    throw new Error(`Could not find ${req.originalUrl} on this server`);
+});
 
 module.exports = app;

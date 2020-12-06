@@ -129,7 +129,7 @@ tourSchema.pre('save', function(next) {
 });
 
 tourSchema.pre(/^find/, function(next) {
-    this.find({$secretTour: {$ne: true}});
+    this.find({secretTour: {$ne: true}});
 
     this.start = Date.now();
     next();
@@ -137,14 +137,14 @@ tourSchema.pre(/^find/, function(next) {
 
 tourSchema.pre(/^find/, function(next) {
     this.populate({
-        path: 'guieds',
+        path: 'guides',
         select: '-__v -passwordChangedAt'
     });
     next();
 });
 
 tourSchema.pre('aggergate', function(next) {
-    this.pipeline().unshift({$match: {$secretTour: {$ne: true}}});
+    this.pipeline().unshift({$match: {secretTour: {$ne: true}}});
 
     console.log(this.pipeline(0));
     next();

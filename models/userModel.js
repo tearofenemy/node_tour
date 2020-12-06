@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         minLength: [7, 'The username cannot be less than 7'],
         maxLength: [20, 'The username cannot be greater than 20']

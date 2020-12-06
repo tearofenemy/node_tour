@@ -49,7 +49,6 @@ router
     .route('/deleteMe')
     .delete(deleteMe) 
 
-
 router
     .route('/me')
     .get(getMe, getUser)
@@ -59,7 +58,7 @@ router
     .patch(updatePassword); 
 
  
-router.use(restrictTo('admin'));      
+//router.use(restrictTo('admin'));      
 
 router
     .route('/')
