@@ -162,7 +162,7 @@ exports.getDistances = async (req, res, next) => {
             }
         },
         {
-            $porject: {
+            $project: {
                 distance: 1,
                 name: 1
             }
