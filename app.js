@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const cors = require('cors');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,9 +31,10 @@ const limiter = rateLimit({
 
 app.use(express.json());
 app.use('/api', limiter);
-app.use(helmet());
+//app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
+app.use(cors());
 
 //ROUTES
 
