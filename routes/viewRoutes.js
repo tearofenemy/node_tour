@@ -1,8 +1,11 @@
 const express = require('express');
 const {
     getOverview,
-    getTour
+    getTour,
+    getLogin
 } = require('./../controllers/viewController');
+
+const {protect} = require('./../controllers/authController');
 
 const router = express.Router();
 
@@ -12,6 +15,10 @@ router
 
 router
     .route('/tour/:slug')
-    .get(getTour);    
+    .get(protect, getTour);    
+
+router
+    .route('/login')
+    .get(getLogin)    
 
 module.exports = router;

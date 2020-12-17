@@ -4,7 +4,8 @@ const path = require('path');
 const bodyParser = require('body-parser').json();
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
+//const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const cors = require('cors');
@@ -30,6 +31,7 @@ const limiter = rateLimit({
 });
 
 app.use(express.json());
+app.use(cookieParser());
 app.use('/api', limiter);
 //app.use(helmet());
 app.use(mongoSanitize());

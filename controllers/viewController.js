@@ -20,3 +20,9 @@ exports.getTour = async (req, res) => {
         tour
     });   
 }
+
+exports.getLogin = (req, res) => {
+    res.status(200).render('login', {
+        title: 'LOG INTO YOUR ACCOUNT'
+    });
+}
