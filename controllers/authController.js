@@ -36,9 +36,10 @@ const createSendToken = (user, statusCode, res) => {
 exports.signup = async (req, res) => {
     try {
         const newUser = await User.create({
-            username: req.body.username,
+            name: req.body.name,
             email: req.body.email,
             //role: req.body.role,
+            avatar: req.body.avatar || '',
             password: req.body.password,
             confirmPassword: req.body.confirmPassword
         });
@@ -66,18 +67,21 @@ exports.login = async (req, res, next) => {
             return next(); //Incorrect password or email
         }
     
-        const token = signToken(user._id);
-    
-        res.status(200).json({
-            status: 'success',
-            token
-        });
+        createSendToken(user, 200, res);
     } catch (e) {
         res.status(400).json({
             status: 'failed',
             message: e.message
         });
     }
+}
+
+exports.logout = (req, res) => {
+    res.cookie('jwt', 'loggedout', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true
+    });
+    res.status(200).json({status: 'success'});
 }
 
 exports.protect = async (req, res, next) => {
@@ -107,6 +111,33 @@ exports.protect = async (req, res, next) => {
     }
 
     req.user = currentUser;
+    //res.locals.user = currentUser;
+    next();
+}
+
+//Only for rendering pages
+exports.isLoggedIn = async (req, res, next) => {
+    
+    if (req.cookies.jwt) {
+        try {
+            const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+
+            //check that if user still exists 
+            const currentUser = await User.findById(decoded.id);
+            if(!currentUser) {
+                return next(); //the token belonging for this user does not longer exist
+            }
+            
+            if(currentUser.changedPasswordAfter(decoded.iat)) {
+                return next(); //User resently changed password. Please, log again
+            }
+
+            res.locals.user = currentUser;
+            return next();
+        } catch(e) {
+            return next();
+        }
+    }
     next();
 }
 
@@ -116,7 +147,6 @@ exports.restrictTo = (...roles) => {
             return next(); //You are not have a permission
         }
     };
-
     next();
 }
 

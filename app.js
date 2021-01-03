@@ -14,6 +14,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+app.use(cookieParser());
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -31,7 +32,6 @@ const limiter = rateLimit({
 });
 
 app.use(express.json());
-app.use(cookieParser());
 app.use('/api', limiter);
 //app.use(helmet());
 app.use(mongoSanitize());

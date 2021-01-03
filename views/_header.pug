@@ -6,12 +6,14 @@ header.header
                 svg
                     use(xlink:href="/img/icons.svg#icon-search")
             input.nav__search-input(type="text" placeholder="Search tours")
-    .header__logo
+    .header__logo 
         img(src="/img/logo-green-small.png" alt="Natours logo")           
     nav.nav.nav--user
-        a.nav__el(href="#") My Bookings 
-        //a.nav__el(href="#")
-            img.nav__user-img(alt="User")
-            span Jonas
-        a.nav__el(href='/login') Log In    
-        a.nav__el.nav__el--cta Sign Up
+        if user
+            a#user_log.nav__el.nav__el--logout Logout 
+            a.nav__el(href="#")
+                img.nav__user-img(alt=`${user.name.split(' ')[0]}` src=`/img/users/${user.avatar}`)
+                span= user.name.split(' ')[0]
+        else       
+            a.nav__el(href='/login') Log In    
+            a.nav__el.nav__el--cta(href="#") Sign Up        

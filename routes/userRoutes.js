@@ -13,6 +13,7 @@ const {
 const {
     signup,
     login,
+    logout,
     forgotPassword,
     resetPassword,
     updatePassword,
@@ -31,12 +32,26 @@ router
     .post(login);
 
 router
+    .route('/logout')
+    .get(logout);    
+
+router
     .route('/forgot-password')
     .post(forgotPassword);
 
 router
     .route('/reset-password/:token')
     .patch(resetPassword);  
+
+router
+    .route('/')
+    .get(getUsers);
+
+router
+    .route('/:id')
+    .get(getUser)
+    .patch(updateUser)
+    .delete(deleteUser);
 
 
 router.use(protect);
@@ -60,15 +75,6 @@ router
  
 //router.use(restrictTo('admin'));      
 
-router
-    .route('/')
-    .get(getUsers);
-
-router
-    .route('/:id')
-    .get(getUser)
-    .patch(updateUser)
-    .delete(deleteUser);
 
 
 module.exports = router;
