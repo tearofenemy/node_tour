@@ -40,7 +40,7 @@ const logout = async () => {
             url: 'http://localhost:8001/api/v1/users/logout' 
         });
         if(res.data.status === 'success') {
-            location.reload();
+            location.assign('/login');
         }
     } catch(e) {
         showAlert('error', e.message);

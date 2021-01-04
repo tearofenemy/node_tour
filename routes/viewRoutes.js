@@ -2,25 +2,32 @@ const express = require('express');
 const {
     getOverview,
     getTour,
-    getLogin
+    getLogin,
+    getAccount
 } = require('./../controllers/viewController');
 
-const {isLoggedIn} = require('./../controllers/authController');
+const {isLoggedIn, protect} = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.use(isLoggedIn);
+//router.use(protect);
+
+router
+    .route('/me')
+    .get(protect, getAccount);
+
+//router.use(isLoggedIn);
 
 router
     .route('/')
-    .get(getOverview);
+    .get(isLoggedIn, getOverview);
 
 router
     .route('/tour/:slug')
-    .get(getTour);    
+    .get(isLoggedIn, getTour);    
 
 router
     .route('/login')
-    .get(getLogin)    
+    .get(isLoggedIn, getLogin)    
 
 module.exports = router;
