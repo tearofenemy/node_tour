@@ -16,7 +16,10 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true
     },
-    avatar: String,
+    avatar: {
+        type: String,
+        default: 'default.jpg'
+    },
     role: {
         type: String,
         enum: ['user', 'guide', 'lead-guide', 'admin'],

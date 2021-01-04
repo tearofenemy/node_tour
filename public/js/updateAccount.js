@@ -22,9 +22,14 @@ const updateSettings = async (data, type) => {
 
 document.querySelector('.form-user-data').addEventListener('submit', e => {
     e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    updateSettings({name, email}, 'data');
+
+    const form = new FormData();
+
+    form.append('name', document.getElementById('name').value);
+    form.append('email', document.getElementById('email').value);
+    form.append('avatar', document.getElementById('avatar').files[0]);
+
+    updateSettings(form, 'data');
 });
 
 document.querySelector('.form-user-password').addEventListener('submit', async e => {

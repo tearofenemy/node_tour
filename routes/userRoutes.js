@@ -7,7 +7,9 @@ const {
     deleteUser,
     updateMe,
     deleteMe,
-    getMe
+    getMe,
+    uploadUserAvatar,
+    resizeUserAvatar
 } = require('../controllers/userController');
 
 const {
@@ -53,20 +55,19 @@ router
     .put(updateUser)
     .delete(deleteUser);
 
-
 router.use(protect);
 
 router
     .route('/updateMe')
-    .patch(updateMe)    
+    .patch(uploadUserAvatar, resizeUserAvatar, updateMe);    
 
 router
     .route('/deleteMe')
-    .delete(deleteMe) 
+    .delete(deleteMe);
 
 router
     .route('/me')
-    .get(getMe, getUser)
+    .get(getMe, getUser);
 
 router
     .route('/updateMyPassword')
