@@ -21,9 +21,13 @@ exports.getUser = getOne(User);
 
 exports.updateMe = async (req, res, next) => {
 
-    const filtererdObj = filterObj(req.body, 'name', 'email');
+    if(req.body.password || req.body.confirmPassword) {
+        next(); //this route is not for update pass.
+    }
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.id, filtererdObj, {
+    const filteredBody = filterObj(req.body, 'name', 'email');
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
         new: true,
         runValidators: true
     });

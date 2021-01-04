@@ -50,7 +50,7 @@ router
 router
     .route('/:id')
     .get(getUser)
-    .patch(updateUser)
+    .put(updateUser)
     .delete(deleteUser);
 
 
@@ -69,7 +69,7 @@ router
     .get(getMe, getUser)
 
 router
-    .route('/update-password')
+    .route('/updateMyPassword')
     .patch(updatePassword); 
 
 module.exports = router;

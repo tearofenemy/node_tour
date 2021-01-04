@@ -9,7 +9,6 @@ const showAlert = (type, msg) => {
     window.setTimeout(hideAlert, 5000);
 }
 
-
 const login = async (email, password) => {
     console.log(email, password);
     try {

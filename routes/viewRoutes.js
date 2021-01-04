@@ -27,8 +27,4 @@ router
     .route('/login')
     .get(isLoggedIn, getLogin)    
 
-router
-    .route('/submit-user-data')
-    .post(protect, updateUserData);    
-
 module.exports = router;
