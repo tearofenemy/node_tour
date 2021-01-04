@@ -3,20 +3,17 @@ const {
     getOverview,
     getTour,
     getLogin,
-    getAccount
+    getAccount,
+    updateUserData
 } = require('./../controllers/viewController');
 
 const {isLoggedIn, protect} = require('./../controllers/authController');
 
 const router = express.Router();
 
-//router.use(protect);
-
 router
     .route('/me')
     .get(protect, getAccount);
-
-//router.use(isLoggedIn);
 
 router
     .route('/')
@@ -29,5 +26,9 @@ router
 router
     .route('/login')
     .get(isLoggedIn, getLogin)    
+
+router
+    .route('/submit-user-data')
+    .post(protect, updateUserData);    
 
 module.exports = router;

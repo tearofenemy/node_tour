@@ -51,7 +51,7 @@ window.onload = () => {
     document.getElementById('user_log').addEventListener('click', logout);
 }
 
-document.querySelector('.form').addEventListener('submit', e => {
+document.querySelector('.form--login').addEventListener('submit', e => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;

@@ -72,9 +72,4 @@ router
     .route('/update-password')
     .patch(updatePassword); 
 
- 
-//router.use(restrictTo('admin'));      
-
-
-
 module.exports = router;
