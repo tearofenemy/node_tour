@@ -20,10 +20,10 @@ const multerFilter = (req, file, cb) => {
     }
 }
 
-const upload = {
+const upload = multer({
     storage: multerStorage,
     fileFilter: multerFilter
-}
+});
 
 exports.uploadTourImages = upload.fields([
     {
@@ -40,7 +40,6 @@ exports.resizeTourImages = async (req, file, cb) => {
     console.log(req.files);
 
     if(!req.files.imageCover || !req.files.images) return next();
-
 
     const imageCoverFilename = `tour-${req.params.id}-${Date.now()}-cover.jpg`;
     req.body.imageCover = imageCoverFilename;

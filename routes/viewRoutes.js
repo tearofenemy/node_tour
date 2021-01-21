@@ -4,7 +4,8 @@ const {
     getTour,
     getLogin,
     getAccount,
-    updateUserData
+    updateUserData,
+    getSignUp
 } = require('./../controllers/viewController');
 
 const {isLoggedIn, protect} = require('./../controllers/authController');
@@ -25,6 +26,10 @@ router
 
 router
     .route('/login')
-    .get(isLoggedIn, getLogin)    
+    .get(isLoggedIn, getLogin)
+    
+router
+    .route('/signup')
+    .get(getSignUp)    
 
 module.exports = router;

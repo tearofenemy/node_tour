@@ -28,6 +28,10 @@ exports.getLogin = (req, res) => {
     });
 }
 
+exports.getSignUp = (req, res) => {
+    res.status(200).render('signup');
+}
+
 exports.getAccount = (req, res) => {
     res.status(200).render('account', {
         title: 'Your Account'

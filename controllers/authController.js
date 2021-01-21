@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const {promisify} = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
-const sendEmail = require('./../utils/email');
+const Email = require('./../utils/email');
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -17,7 +17,7 @@ const createSendToken = (user, statusCode, res) => {
         expires: new Date(Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000),
         httpOnly: true
     };
-    
+     
     if(process.env.NODE_ENV === 'production') cookieOptions.secure = true;
     
     res.cookie('jwt', token, cookieOptions);
@@ -34,23 +34,20 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = async (req, res) => {
-    try {
-        const newUser = await User.create({
-            name: req.body.name,
-            email: req.body.email,
-            //role: req.body.role,
-            avatar: req.body.avatar || '',
-            password: req.body.password,
-            confirmPassword: req.body.confirmPassword
-        });
+    // const newUser = await User.create({
+    //     name: req.body.name,
+    //     email: req.body.email,
+    //     password: req.body.password,
+    //     confirmPassword: req.body.confirmPassword
+    // });
 
-        createSendToken(newUser, 201, res);
-    } catch(e) {
-        res.status(400).json({
-            status: 'failed',
-            message: e.message
-        });
-    }
+    const newUser = await User.create(req.body);
+
+    const url = `${req.protocol}://${req.get('host')}/me`;
+
+    await new Email(newUser, url).sendWelcome();
+
+    createSendToken(newUser, 201, res);
 }
 
 exports.login = async (req, res, next) => {
@@ -94,7 +91,7 @@ exports.protect = async (req, res, next) => {
     }
 
     if(!token) {
-        throw new Error('You are not login.'); // User are not logged in
+        next();//throw new Error('You are not login.'); User are not logged in
     }
 
     //verification token
@@ -167,11 +164,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     try {
 
-        await sendEmail({
-            email: user.email,
-            subject: 'Your password reset token available 10 min',
-            message
-        });
+        await new Email(user, resetUrl).sendPassword();
 
         res.status(200).json({
             status: 'success',
